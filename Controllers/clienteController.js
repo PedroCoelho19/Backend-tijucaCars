@@ -52,7 +52,7 @@ exports.cadastraClientes = (req, res, next) => {
                             ],
                             (error, result) => {
                                 conn.release();
-    
+
                                 if (error) { res.status(500).send({ error: error, response: null }) }
                                 const response = {
                                     mensagem: 'Carro Criado com sucesso',
@@ -66,14 +66,14 @@ exports.cadastraClientes = (req, res, next) => {
                                         status: req.body.status
                                     }
                                 }
-    
+
                                 res.status(201).send(response)
                             })
-    
+
                     })
-                    
-                 
-                   
+
+
+
                 }
             })
 
@@ -103,14 +103,17 @@ exports.login = (req, res, next) => {
                 if (result) {
                     const token = jwt.sign({
                         idCliente: results[0].idCliente,
-                        email: results[0].email
+                        email: results[0].email,
+                        adm: results[0].adm
                     }, process.env.JWT_KEY,
                         {
                             expiresIn: "2h"
                         })
+
                     return res.status(200).send({
                         mensagem: 'Autenticado com sucesso',
-                        token: token
+                        token: token,
+                        adm: results[0].adm
                     })
                 }
 
@@ -172,23 +175,27 @@ exports.alteraCliente = (req, res, next) => {
 
 exports.removeCliente = (req, res, next) => {
     mysql.getConnection((error, conn) => {
-        if (error) { return res.status(500).send({ error: error }) };
-        console.log(conn)
-        conn.query(
-            'DELETE FROM clientes WHERE idCliente = ?', [req.body.idCliente],
-            (error, resultado, field) => {
-                conn.release();
-                if (error) {
-                    res.status(500).send({
-                        error: error,
-                        response: null
+        try {
+            if (error) { return res.status(500).send({ error: error }) };
+            conn.query(
+                'DELETE FROM clientes WHERE idCliente = ?', [req.params.idCliente],
+                (error, resultado, field) => {
+                    conn.release();
+                    if (error) {
+                        res.status(500).send({
+                            error: error,
+                            response: null
+                        })
+                    }
+                    res.status(202).send({
+                        mensagem: 'Cliente removido com sucesso',
+                        idCarro: resultado.insertId
                     })
                 }
-                res.status(202).send({
-                    mensagem: 'Cliente removido com sucesso',
-                    id_produto: resultado.insertId
-                })
-            }
-        )
-    });
+            )
+
+        } catch (error) {
+            console.log(error.mensagem)
+        }
+    })
 }

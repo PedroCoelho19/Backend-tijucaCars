@@ -8,11 +8,11 @@ const jwt = require('jsonwebtoken')
 const ClienteControllers = require('../Controllers/clienteController')
 
 router.get(
-    '/',
+    '/clientes',
     ClienteControllers.getClientes
 );
 router.post(
-    '/cadastroClientes',
+    '/cadastro',
     login.obrigatorio,
     ClienteControllers.cadastraClientes
 );
@@ -21,16 +21,16 @@ router.get(
     ClienteControllers.getClienteId
 )
 router.post(
-    '/Login',
+    '/login',
     ClienteControllers.login
 )
 router.patch(
-    '/',
+    '/editarCliente',
     login.obrigatorio,
     ClienteControllers.alteraCliente
 )
 router.delete(
-    '/',
+    '/removeCliente/:idCliente',
     login.obrigatorio,
     ClienteControllers.removeCliente
 )

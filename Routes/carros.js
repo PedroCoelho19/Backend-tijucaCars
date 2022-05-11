@@ -6,7 +6,7 @@ const login = require('../Middleware/login')
 const CarrosControlles = require('../Controllers/carrosControllers')
 
 router.get(
-    '/',
+    '/carros',
     CarrosControlles.getCarros
 );
 
@@ -22,13 +22,13 @@ router.get(
 );
 
 router.patch(
-    '/',
+    '/alterarCarro',
     login.obrigatorio,
     CarrosControlles.alteraCarro
 );
 
 router.delete(
-    '/',
+    '/removeCarro/:idCarro',
     login.obrigatorio,
     CarrosControlles.removeCarro
 );

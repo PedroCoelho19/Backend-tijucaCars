@@ -114,23 +114,28 @@ exports.alteraCarro = (req, res, next) => {
 exports.removeCarro = (req, res, next) => {
 
     mysql.getConnection((error, conn) => {
-        if (error) { return res.status(500).send({ error: error }) };
-        console.log(conn)
-        conn.query(
-            'DELETE FROM carros WHERE idCarro = ?', [req.body.idCarro],
-            (error, resultado, field) => {
-                conn.release();
-                if (error) {
-                    res.status(500).send({
-                        error: error,
-                        response: null
+        try {
+            if (error) { return res.status(500).send({ error: error }) };
+            conn.query(
+                'DELETE FROM carros WHERE idCarro = ?', [req.params.idCarro],
+                (error, resultado, field) => {
+                    conn.release();
+                    if (error) {
+                        res.status(500).send({
+                            error: error,
+                            response: null
+                        })
+                    }
+                    res.status(202).send({
+                        mensagem: 'Carro removido com sucesso',
+                        idCarro: resultado.insertId
                     })
                 }
-                res.status(202).send({
-                    mensagem: 'Carro removido com sucesso',
-                    idCarro: resultado.insertId
-                })
-            }
-        )
-    });
+            )
+
+        } catch (error) {
+            console.log(error.mensagem)
+        }
+    }
+    )
 }

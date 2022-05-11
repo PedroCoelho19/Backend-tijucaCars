@@ -25,7 +25,12 @@ exports.novoAluguel =  (req, res, next) => {
                 qtdeDiasAlugados, 
                 status
                     ) 
-                    VALUES (?,?,?,?,?)`,
+                    VALUES (?,?,?,?,?)
+                
+                    
+                ` 
+             
+                    ,
             [
                 req.body.dataReserva,
                 req.body.dataRetirada,
@@ -106,7 +111,6 @@ exports.alteraAluguel = (req, res, next) => {
         )
     })
 }
-
 
 exports.removeAluguel = (req, res, next) => {
     mysql.getConnection((error, conn) => {
