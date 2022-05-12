@@ -17,9 +17,9 @@ exports.getClientes = (req, res, next) => {
 }
 
 exports.cadastraClientes = (req, res, next) => {
-    mysql.getConnection((error, conn) => {
+    mysql.getConnection((error, conn  ) => {
         conn.query('SELECT * FROM clientes WHERE email = ?',
-            [req.body.email], (error, result) => {
+            [req.body.email], (error, result, ) => {
                 if (error) { return res.status(500).send({ error: error }) }
                 if (result.length > 0) {
                     res.status(409).send({

@@ -41,56 +41,69 @@ exports.getAluguel = (req, res, next) => {
 
 exports.novoAluguel = (req, res, next) => {
     mysql.getConnection((error, conn) => {
-        conn.query('SELECT * FROM clientes WHERE idCliente = ?',
-            [req.body.idCliente], (error, result) => {
-                if (error) { return res.status(500).send({ error: error }) }
-                if (result[0].statusCliente === 1) {
-                    res.status(409).send({
-                        mensagem: 'Você não pode executar essa operação'
-                    })
-                } else {
-                    if (error) { return res.status(500).send({ error: error }) };
-                    conn.query(
-                        `INSERT INTO alugueis (
-                            dataReserva, 
-                            dataRetirada, 
-                            dataEntrega, 
-                            qtdeDiasAlugados,
-                            valorAluguel,
-                            idCarro,
-                            idCliente, 
-                            statusAluguel
-                                ) 
-                                VALUES (?,?,?,?,?,?,?,?) `,
-                        [
-                            req.body.dataReserva,
-                            req.body.dataRetirada,
-                            req.body.dataEntrega,
-                            req.body.qtdeDiasAlugados,
-                            req.body.valorAluguel,
-                            req.body.idCarro,
-                            req.body.idCliente,
-                            req.body.statusAluguel
-                        ],
-                        (error, result) => {
-                            conn.release();
-
-                            if (error) { res.status(500).send({ error: error, response: null }) }
-                            const response = {
-                                mensagem: 'Novo aluguel adicionado',
-                                clienteCriado: {
-                                    dataReserva: req.body.dataReserva,
-                                    dataRetirada: req.body.dataRetirada,
-                                    dataEntrega: req.body.dataEntrega,
-                                    qtdeDiasAlugados: req.body.qtdeDiasAlugados,
-                                    statusAlugeul: req.body.status
-                                }
-                            }
-
-                            res.status(201).send(response)
+        try {
+            conn.query('SELECT * FROM clientes WHERE idCliente = ?',
+                [req.body.idCliente], (error, result) => {
+                    if (error) { return res.status(500).send({ error: error }) }
+                    if (result[0].statusCliente === 1) {
+                        res.status(409).send({
+                            mensagem: 'Você não pode executar essa operação'
                         })
-                }
-            })
+                    } else {
+                        if (error) { return res.status(500).send({ error: error }) };
+                        conn.query(
+                            `INSERT INTO alugueis (
+                        dataReserva, 
+                        dataRetirada, 
+                        dataEntrega, 
+                        qtdeDiasAlugados,
+                        valorAluguel,
+                        idCarro,
+                        idCliente, 
+                        statusAluguel
+                            ) 
+                        VALUES (?,?,?,?,?,?,?,?)   
+                        `,
+                            [
+                                req.body.dataReserva,
+                                req.body.dataRetirada,
+                                req.body.dataEntrega,
+                                req.body.qtdeDiasAlugados,
+                                req.body.valorAluguel,
+                                req.body.idCarro,
+                                req.body.idCliente,
+                                req.body.statusAluguel
+                            ],
+
+                            (error, result) => {
+                                conn.release();
+
+                                if (error) { res.status(500).send({ error: error, response: null }) }
+                                const response = {
+                                    mensagem: 'Novo aluguel adicionado',
+                                    clienteCriado: {
+                                        dataReserva: req.body.dataReserva,
+                                        dataRetirada: req.body.dataRetirada,
+                                        dataEntrega: req.body.dataEntrega,
+                                        qtdeDiasAlugados: req.body.qtdeDiasAlugados,
+                                        statusAlugeul: req.body.statusAluguel
+                                    }
+                                }
+
+                                res.status(201).send(response)
+                            })
+
+                        conn.query(
+                            ` UPDATE clientes 
+                            SET statusCliente = 1
+                            WHERE idCliente = ? 
+                            `,
+                            [req.body.idCliente])
+                    }
+                })
+        } catch (error) {
+            console.log("deu erro", error)
+        }
     })
 }
 
