@@ -5,9 +5,16 @@ const login = require('../Middleware/login')
 const AlugueisControlles = require('../Controllers/alugueisControlle')
 
 router.get(
-    '/',
-    AlugueisControlles.getAluguel
+    '/filtroAluguel',
+    login.obrigatorio,
+    AlugueisControlles.getAluguelFiltro
 );
+
+router.get(
+    '/alugueis',
+    login.obrigatorio,
+    AlugueisControlles.getAluguel
+)
 
 router.post(
     '/novoAluguel',
@@ -24,8 +31,8 @@ router.patch(
     AlugueisControlles.alteraAluguel
 );
 
-router.delete(
-    '/removeAluguel',
+router.patch(
+    '/removeAluguel/:idAluguel',
     AlugueisControlles.removeAluguel
     )
 

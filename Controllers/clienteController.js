@@ -69,9 +69,6 @@ exports.cadastraClientes = (req, res, next) => {
                             })
 
                     })
-
-
-
                 }
             })
 
