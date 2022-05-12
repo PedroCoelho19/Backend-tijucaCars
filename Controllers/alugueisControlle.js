@@ -38,12 +38,14 @@ exports.novoAluguel =  (req, res, next) => {
                 idCliente, 
                 status
                     ) 
-                    VALUES (?,?,?,?,?) `,
+                    VALUES (?,?,?,?,?,?,?) `,
             [
                 req.body.dataReserva,
                 req.body.dataRetirada,
                 req.body.dataEntrega,
                 req.body.qtdeDiasAlugados,
+                req.body.idCliente,
+                req.body.idCarro,
                 req.body.status
             ],
             (error, result) => {

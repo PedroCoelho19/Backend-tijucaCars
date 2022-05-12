@@ -10,6 +10,12 @@ router.get(
     CarrosControlles.getCarros
 );
 
+router.get(
+    '/carrosDisponiveis',
+    login.obrigatorio,
+    CarrosControlles.getCarrosDisponiveis
+);
+
 router.post(
     '/cadastro',
     login.obrigatorio,
