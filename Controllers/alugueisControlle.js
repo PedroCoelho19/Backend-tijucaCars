@@ -1,10 +1,21 @@
 const mysql = require('../mysql').pool;
 
-exports.getCarros = (req, res, next) => {
+exports.getAluguel = (req, res, next) => {
     mysql.getConnection((error, conn) => {
         if (error) { return res.status(500).send({ error: error }) };
         conn.query(
-            'SELECT * FROM alugueis',
+            `SELECT u.nome, 
+                    c.modelo, 
+                    c.placa, 
+                    a.dataRetirada, 
+                    a.dataEntrega,
+                    a.valorAluguel  
+             FROM alugueis a 
+                    JOIN carros c
+                    ON a.idCarro = c.idCarro
+                    JOIN clientes u 
+                    ON a.idCliente = u.idCliente
+             WHERE statusAluguel = 0`,
             (error, resultado, fields) => {
                 if (error) { return res.status(500).send({ error: error }) }
                 return res.status(200).send({ response: resultado });
@@ -22,15 +33,12 @@ exports.novoAluguel =  (req, res, next) => {
                 dataReserva, 
                 dataRetirada, 
                 dataEntrega, 
-                qtdeDiasAlugados, 
+                qtdeDiasAlugados,
+                idCarro,
+                idCliente, 
                 status
                     ) 
-                    VALUES (?,?,?,?,?)
-                
-                    
-                ` 
-             
-                    ,
+                    VALUES (?,?,?,?,?) `,
             [
                 req.body.dataReserva,
                 req.body.dataRetirada,

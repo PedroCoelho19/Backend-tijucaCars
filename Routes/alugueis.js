@@ -6,7 +6,7 @@ const AlugueisControlles = require('../Controllers/alugueisControlle')
 
 router.get(
     '/',
-    AlugueisControlles.getCarros
+    AlugueisControlles.getAluguel
 );
 
 router.post(
