@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 const { send } = require("express/lib/response");
 
 const mysql = require("../mysql").pool;
 
+=======
+const mysql = require("../mysql").pool;
+
+>>>>>>> cd32582187cfe83d8547dddf316c7559e2dc4f4f
 exports.getCarros = (req, res, next) => {
   mysql.getConnection((error, conn) => {
     if (error) {
@@ -112,6 +117,7 @@ exports.getCarrosId = (req, res, next) => {
   });
 };
 
+<<<<<<< HEAD
 exports.devolveCarro = (req, res, next) => {
   mysql.getConnection((error, conn) => {
     if(error){return res.status(500).send({error:error})};
@@ -138,6 +144,8 @@ exports.devolveCarro = (req, res, next) => {
   })
 };
 
+=======
+>>>>>>> cd32582187cfe83d8547dddf316c7559e2dc4f4f
 exports.getInsertCode = (req, res, next) => {
   return res.status(200).send({ response: "Adicione um idCarro para a rota!" });
 };

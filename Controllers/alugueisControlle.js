@@ -142,6 +142,7 @@ exports.novoAluguel = (req, res, next) => {
                             WHERE idCliente = ? 
                             `,
                             [req.body.idCliente])
+<<<<<<< HEAD
 
                         conn.query(
                             ` UPDATE carros
@@ -150,6 +151,15 @@ exports.novoAluguel = (req, res, next) => {
                                 `,
                             [req.body.idCarro]
                         )
+=======
+                            conn.query(
+                                ` UPDATE carros
+                                SET statusCarro = 2
+                                WHERE idCarro = ?
+                                `,
+                                [req.body.idCarro]
+                            )
+>>>>>>> cd32582187cfe83d8547dddf316c7559e2dc4f4f
                     }
                 })
         } catch (error) {
