@@ -11,6 +11,18 @@ router.get(
 );
 
 router.get(
+    '/dataAluguel/:idCarro',
+    login.obrigatorio,
+    AlugueisControlles.getDataCarro
+)
+
+router.get(
+    '/aluguelCliente/:idCliente',
+    login.obrigatorio,
+    AlugueisControlles.getAluguelCliente
+)
+
+router.get(
     '/alugueis',
     login.obrigatorio,
     AlugueisControlles.getAluguel
@@ -32,7 +44,7 @@ router.patch(
 );
 
 router.patch(
-    '/removeAluguel/:idAluguel',
+    '/removeAluguel/:idAluguel/:idCarro',
     AlugueisControlles.removeAluguel
     )
 

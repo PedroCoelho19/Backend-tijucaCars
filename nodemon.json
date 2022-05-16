@@ -2,7 +2,7 @@
     "env": {
         "MYSQL_USER": "estagiario_05",
         "MYSQL_PASSWORD" : "741852",
-        "MYSQL_DATABASE" : "tijucaCar",
+        "MYSQL_DATABASE" : "TijucaCar2",
         "MYSQL_HOST" : "localhost",
         "MYSQL_PORT" : 3306,
 

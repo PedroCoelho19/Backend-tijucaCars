@@ -10,6 +10,12 @@ router.get(
     CarrosControlles.getCarros
 );
 
+router.patch(
+    '/devolveCarro/:idCarro',
+    login.obrigatorio,
+    CarrosControlles.devolveCarro
+    )
+
 router.get(
     '/carrosDisponiveis',
     login.obrigatorio,
@@ -26,6 +32,11 @@ router.get(
     '/:idCarro',
     CarrosControlles.getCarrosId
 );
+
+router.get(
+    '/',
+    CarrosControlles.getInsertCode
+)
 
 router.patch(
     '/alterarCarro',
