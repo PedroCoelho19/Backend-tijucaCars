@@ -25,6 +25,49 @@ exports.getAluguelFiltro = (req, res, next) => {
     })
 }
 
+exports.getAluguelCliente = (req, res, next) => {
+    mysql.getConnection((error, conn) => {
+        if (error) { return res.status(500).send({ error: error }) };
+        conn.query(
+            'SELECT * FROM alugueis WHERE idCliente = ?',
+            [req.params.idCliente],
+            (error, resultado, fields) => {
+                if (error) { return res.status(500).send({ error: error }) }
+                return res.status(200).send({ response: resultado });
+            }
+
+        )
+    })
+}
+
+exports.getDataCarro = (req, res, next) => {
+    mysql.getConnection((error, conn) => {
+        if (error) { return res.status(500).send({ error: error }) };
+        conn.query(
+            'SELECT dataRetirada, dataEntrega FROM alugueis WHERE idCarro = ?',
+            [req.params.idCarro],
+            (error, resultado, fields) => {
+                if (error) { return res.status(500).send({ error: error }) }
+                return res.status(200).send({ response: resultado });
+            }
+        )
+    })
+}
+
+exports.getAluguel = (req, res, next) => {
+    mysql.getConnection((error, conn) => {
+        if (error) { return res.status(500).send({ error: error }) };
+        conn.query(
+            'SELECT * FROM alugueis',
+            (error, resultado, fields) => {
+                if (error) { return res.status(500).send({ error: error }) }
+                return res.status(200).send({ response: resultado });
+            }
+        )
+        res.status(201).send(response)
+    })
+}
+
 exports.getAluguel = (req, res, next) => {
     mysql.getConnection((error, conn) => {
         if (error) { return res.status(500).send({ error: error }) };
@@ -99,6 +142,14 @@ exports.novoAluguel = (req, res, next) => {
                             WHERE idCliente = ? 
                             `,
                             [req.body.idCliente])
+
+                        conn.query(
+                            ` UPDATE carros
+                                SET statusCarro = 2
+                                WHERE idCarro = ?
+                                `,
+                            [req.body.idCarro]
+                        )
                     }
                 })
         } catch (error) {
@@ -173,7 +224,7 @@ exports.removeAluguel = (req, res, next) => {
 
                 [req.params.idAluguel],
                 (error, resultado, field) => {
-                    conn.release();
+
                     if (error) { res.status(500).send({ error: error, response: null }) }
                     res.status(202).send({
                         mensagem: 'Aluguel removido com sucesso',
@@ -181,6 +232,18 @@ exports.removeAluguel = (req, res, next) => {
                     })
                 }
             )
+
+            conn.query(
+                `UPDATE carros
+                SET statusCarro = 3
+                WHERE idCarro = ?`,
+                [req.params.idCarro],
+                (error, resultado, field) => {
+                    conn.release();
+                    if (error) { res.status(500).send({ error: error, response: null }) }
+                }
+            )
+
         } catch (error) {
             console.log('Esse aluguel não existe')
         }

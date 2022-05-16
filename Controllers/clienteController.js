@@ -36,9 +36,10 @@ exports.cadastraClientes = (req, res, next) => {
                         email, 
                         telefone, 
                         senha,
-                        status
+                        adm,
+                        statusCliente
                         ) 
-                        VALUES (?,?,?,?,?,?,?)`,
+                        VALUES (?,?,?,?,?,?,?,?)`,
                             [
                                 req.body.nome,
                                 req.body.cnh,
@@ -46,6 +47,7 @@ exports.cadastraClientes = (req, res, next) => {
                                 req.body.email,
                                 req.body.telefone,
                                 hash,
+                                req.body.admin,
                                 req.body.status
                             ],
                             (error, result) => {
@@ -53,7 +55,7 @@ exports.cadastraClientes = (req, res, next) => {
 
                                 if (error) { res.status(500).send({ error: error, response: null }) }
                                 const response = {
-                                    mensagem: 'Carro Criado com sucesso',
+                                    mensagem: 'Cliente cadastrado com Sucesso!',
                                     clienteCriado: {
                                         modelo: req.body.nome,
                                         placa: req.body.cnh,
@@ -61,7 +63,7 @@ exports.cadastraClientes = (req, res, next) => {
                                         cor: req.body.email,
                                         valorDiaAluguel: req.body.telefone,
                                         senha: hash,
-                                        status: req.body.status
+                                        statusCliente: req.body.status
                                     }
                                 }
 
