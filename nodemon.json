@@ -1,6 +1,6 @@
 {
     "env": {
-        "MYSQL_USER": "estagiario_05",
+        "MYSQL_USER": "fabricio",
         "MYSQL_PASSWORD" : "741852",
         "MYSQL_DATABASE" : "tijucaCar",
         "MYSQL_HOST" : "localhost",

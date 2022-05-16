@@ -27,6 +27,11 @@ router.get(
     CarrosControlles.getCarrosId
 );
 
+router.get(
+    '/',
+    CarrosControlles.getInsertCode
+)
+
 router.patch(
     '/alterarCarro',
     login.obrigatorio,
