@@ -7,7 +7,8 @@ const CarrosControlles = require('../Controllers/carrosControllers')
 
 //get geral de carros
 router.get(
-    '/carros',
+    '/',
+    login.obrigatorio,
     CarrosControlles.getCarros
 );
 //get de carros que nao estao alugados
@@ -25,6 +26,7 @@ router.post(
 //get carros com id
 router.get(
     '/:idCarro',
+    login.obrigatorio,
     CarrosControlles.getCarrosId
 );
 //tratamento de erro do get carros
@@ -50,7 +52,5 @@ router.delete(
     login.obrigatorio,
     CarrosControlles.removeCarro
 );
-
-
 
 module.exports = router;

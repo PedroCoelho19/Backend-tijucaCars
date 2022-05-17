@@ -19,6 +19,7 @@ exports.getAluguelFiltro = (req, res, next) => {
              WHERE statusAluguel = 0`,
             (error, resultado, fields) => {
                 if (error) { return res.status(500).send({ error: error }) }
+                conn.release();
                 return res.status(200).send({ response: resultado });
             }
 
@@ -34,6 +35,7 @@ exports.getAluguelCliente = (req, res, next) => {
             [req.params.idCliente],
             (error, resultado, fields) => {
                 if (error) { return res.status(500).send({ error: error }) }
+                conn.release();
                 return res.status(200).send({ response: resultado });
             }
 
@@ -48,6 +50,7 @@ exports.getDataCarro = (req, res, next) => {
             'SELECT dataRetirada, dataEntrega FROM alugueis WHERE idCarro = ?',
             [req.params.idCarro],
             (error, resultado, fields) => {
+                conn.release();
                 return res.status(200).send({
                     response: resultado,
                     mensagem: 'O carro ja esta reservado durante essas datas'
@@ -64,6 +67,7 @@ exports.getAluguel = (req, res, next) => {
             'SELECT * FROM alugueis',
             (error, resultado, fields) => {
                 if (error) { return res.status(500).send({ error: error }) }
+                conn.release();
                 return res.status(200).send({ response: resultado });
             }
         )
@@ -131,14 +135,15 @@ exports.novoAluguel = (req, res, next) => {
                             WHERE idCliente = ? 
                             `,
                             [req.body.idCliente])
+                        conn.release();
 
                         conn.query(
                             ` UPDATE carros
                                 SET statusCarro = 2
                                 WHERE idCarro = ?
                                 `,
-                            [req.body.idCarro]
-                        )
+                            [req.body.idCarro])
+                        conn.release();
                     }
                 })
         } catch (error) {
@@ -156,6 +161,7 @@ exports.getAluguelId = (req, res, next) => {
             [req.params.idAluguel],
             (error, resultado, fields) => {
                 if (error) { return res.status(500).send({ error: error }) }
+                conn.release();
                 return res.status(200).send({ response: resultado });
             }
 
@@ -208,13 +214,12 @@ exports.removeAluguel = (req, res, next) => {
             if (error) { return res.status(500).send({ error: error }) };
             conn.query(
                 `UPDATE alugueis 
-             SET statusAluguel = 1
-             WHERE idAluguel = ?`,
-
+                 SET statusAluguel = 1
+                 WHERE idAluguel = ?`,
                 [req.params.idAluguel],
                 (error, resultado, field) => {
-
                     if (error) { res.status(500).send({ error: error, response: null }) }
+                    conn.release();
                     res.status(202).send({
                         mensagem: 'Aluguel removido com sucesso',
                         idAluguel: resultado.insertIdAluguel

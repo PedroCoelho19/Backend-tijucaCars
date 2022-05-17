@@ -4,17 +4,26 @@ const mysql = require("../mysql").pool;
 
 //get de todos os carros
 exports.getCarros = (req, res, next) => {
-  mysql.getConnection((error, conn) => {
-    if (error) {
-      return res.status(500).send({ error: error });
-    }
-    conn.query("SELECT * FROM carros", (error, resultado, fields) => {
+  try {
+    mysql.getConnection((error, conn) => {
       if (error) {
         return res.status(500).send({ error: error });
       }
-      return res.status(200).send({ response: resultado });
+      conn.query("SELECT * FROM carros", (error, resultado, fields) => {
+        if (error) {
+          throw error;
+        }
+        conn.release();
+        return res.status(200).send({ response: resultado });
+      });
+      
     });
-  });
+    
+  }
+  catch (error) {
+    return res.status(500).send({ error: error})
+  }
+
 };
 //get dos carros que não estao alugados
 exports.getCarrosDisponiveis = (req, res, next) => {
@@ -28,6 +37,7 @@ exports.getCarrosDisponiveis = (req, res, next) => {
         if (error) {
           return res.status(500).send({ error: error });
         }
+        conn.release();
         return res.status(200).send({ response: resultado });
       }
     );
@@ -107,6 +117,7 @@ exports.getCarrosId = (req, res, next) => {
         if (error) {
           return res.status(500).send({ error: error });
         }
+        conn.release();
         return res.status(200).send({ response: resultado });
       }
     );
@@ -115,26 +126,27 @@ exports.getCarrosId = (req, res, next) => {
 //altera o status do carro para devolvido se ele estiver em uso
 exports.devolveCarro = (req, res, next) => {
   mysql.getConnection((error, conn) => {
-    if(error){return res.status(500).send({error:error})};
+    if (error) { return res.status(500).send({ error: error }) };
     conn.query(
-        `Select * from carros WHERE idCarro = ?`,
-        [req.params.idCarro],
-        (error, result, field) => {
-          if (error) {return res.status(500).send({ error: error })}
-          
-          if(result[0].statusCarro === 2){
-            conn.query(
-              `UPDATE carros 
+      `Select * from carros WHERE idCarro = ?`,
+      [req.params.idCarro],
+      (error, result, field) => {
+        if (error) { return res.status(500).send({ error: error }) }
+
+        if (result[0].statusCarro === 2) {
+          conn.query(
+            `UPDATE carros 
               SET statusCarro = 3
               WHERE idCarro = ?`,
-              [req.params.idCarro]
-            )
-            res.status(200).send({mensagem:'Carro devolvido com sucesso'})
-          }else{
-            if (error) {return res.status(500).send({ error: error })}
-            res.status(200).send({mensagem:'O Carro ja foi devolvido'})
-          }
+            [req.params.idCarro]
+          )
+          res.status(200).send({ mensagem: 'Carro devolvido com sucesso' })
+        } else {
+          if (error) { return res.status(500).send({ error: error }) }
+          conn.release();
+          res.status(200).send({ mensagem: 'O Carro ja foi devolvido' })
         }
+      }
     )
   })
 };
@@ -196,20 +208,14 @@ exports.removeCarro = (req, res, next) => {
         [req.params.idCarro],
         (error, resultado, field) => {
           conn.release();
-          if (error) {
-            res.status(500).send({
-              error: error,
-              response: null,
-            });
+          if (error) {return res.status(500).send({error: error, response: null,});
           }
-          res.status(202).send({
-            mensagem: "Carro removido com sucesso",
-            idCarro: resultado.insertId,
-          });
+          conn.release();
+          res.status(202).send({mensagem: "Carro removido com sucesso", idCarro: resultado.insertId,});
         }
       );
     } catch (error) {
-      console.log(error.mensagem);
+      return res.status(500).send({ error: error})
     }
   });
 };

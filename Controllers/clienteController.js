@@ -11,6 +11,7 @@ exports.getClientes = (req, res, next) => {
             'SELECT * FROM clientes',
             (error, resultado, fields) => {
                 if (error) { return res.status(500).send({ error: error }) }
+                conn.release();
                 return res.status(200).send({ response: resultado });
             }
 
@@ -32,10 +33,10 @@ exports.cadastraClientes = (req, res, next) => {
                     bcrypt.hash(req.body.senha, 10, (errBcrypt, hash) => {
                         const calcula = idadeMininma(new Date(), new Date(req.body.dataNascimento))
                         console.log(calcula)
-                        if(calcula >= 20){
-                        if (errBcrypt) { return res.status(500).send({ error: error }) };
-                        conn.query(
-                            `INSERT INTO clientes (
+                        if (calcula >= 20) {
+                            if (errBcrypt) { return res.status(500).send({ error: error }) };
+                            conn.query(
+                                `INSERT INTO clientes (
                                         nome, 
                                         cnh, 
                                         dataNascimento, 
@@ -46,37 +47,37 @@ exports.cadastraClientes = (req, res, next) => {
                                         statusCliente
                                                         ) 
                                      VALUES (?,?,?,?,?,?,?,?)`,
-                            [
-                                req.body.nome,
-                                req.body.cnh,
-                                req.body.dataNascimento,
-                                req.body.email,
-                                req.body.telefone,
-                                hash,
-                                req.body.admin,
-                                req.body.status
-                            ],
-                            (error, result) => {
-                                conn.release();
+                                [
+                                    req.body.nome,
+                                    req.body.cnh,
+                                    req.body.dataNascimento,
+                                    req.body.email,
+                                    req.body.telefone,
+                                    hash,
+                                    req.body.admin,
+                                    req.body.status
+                                ],
+                                (error, result) => {
+                                    conn.release();
 
-                                if (error) { res.status(500).send({ error: error, response: null }) }
-                                const response = {
-                                    mensagem: 'Cliente cadastrado com Sucesso!',
-                                    clienteCriado: {
-                                        modelo: req.body.nome,
-                                        placa: req.body.cnh,
-                                        ano: req.body.dataNascimento,
-                                        cor: req.body.email,
-                                        valorDiaAluguel: req.body.telefone,
-                                        senha: hash,
-                                        statusCliente: req.body.status
+                                    if (error) { res.status(500).send({ error: error, response: null }) }
+                                    const response = {
+                                        mensagem: 'Cliente cadastrado com Sucesso!',
+                                        clienteCriado: {
+                                            modelo: req.body.nome,
+                                            placa: req.body.cnh,
+                                            ano: req.body.dataNascimento,
+                                            cor: req.body.email,
+                                            valorDiaAluguel: req.body.telefone,
+                                            senha: hash,
+                                            statusCliente: req.body.status
+                                        }
                                     }
-                                }
 
-                                res.status(201).send(response)
-                            })
-                        }else{
-                            res.status(203).send({mensagem:'O cliente precisa possuir pelo menos 20 anos!!'})
+                                    res.status(201).send(response)
+                                })
+                        } else {
+                            res.status(203).send({ mensagem: 'O cliente precisa possuir pelo menos 20 anos!!' })
                         }
                     })
                 }
@@ -85,6 +86,7 @@ exports.cadastraClientes = (req, res, next) => {
 }
 //faz o validação do usuario e o login no sistema
 exports.login = (req, res, next) => {
+
     mysql.getConnection((error, conn) => {
         if (error) { return res.status(500).send({ error: error }) }
         const query = 'SELECT * FROM clientes WHERE email =?'
@@ -104,7 +106,7 @@ exports.login = (req, res, next) => {
                     })
                 }
                 if (result) {
-                    const token = jwt.sign({
+                    let token = jwt.sign({
                         idCliente: results[0].idCliente,
                         email: results[0].email,
                         adm: results[0].adm
@@ -128,6 +130,7 @@ exports.login = (req, res, next) => {
         })
     })
 }
+
 //get de cliente por id
 exports.getClienteId = (req, res, next) => {
 
@@ -161,14 +164,9 @@ exports.alteraCliente = (req, res, next) => {
             ],
             (error, resultado, field) => {
                 conn.release();
+                if (error) { res.status(500).send({ error: error, response: null }) }
 
-                if (error) {
-                    res.status(500).send({
-                        error: error,
-                        response: null
-                    })
-                }
-                res.status(202).send({
+                return res.status(202).send({
                     mensagem: 'Cliente alterado com sucesso',
                     idCliente: resultado.insertId
                 })

@@ -1,11 +1,10 @@
 const jwt = require('jsonwebtoken');
 
-exports.obrigatorio = async (req, res, next) => {
+exports.obrigatorio =  (req, res, next) => {
     try {
         const token = req.headers.authorization?.split(' ')[1]
-        console.log(token)
         if(token){
-            const decode = await jwt.verify(token, process.env.JWT_KEY);
+            const decode = jwt.verify(token, process.env.JWT_KEY);
             // console.log(req.headers.authorization)
             req.clientes = decode;    
             next();
