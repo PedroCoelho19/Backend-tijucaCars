@@ -50,7 +50,7 @@ exports.getDataCarro = (req, res, next) => {
             (error, resultado, fields) => {
                 return res.status(200).send({
                     response: resultado,
-                    mensagem: 'essas são as datas dos alugeis'
+                    mensagem: 'O carro ja esta reservado durante essas datas'
                 });
             }
         )

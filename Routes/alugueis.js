@@ -15,19 +15,19 @@ router.get(
     '/dataAluguel/:idCarro',
     login.obrigatorio,
     AlugueisControlles.getDataCarro
-)
+);
 //get dos alugueis do cliente
 router.get(
     '/aluguelCliente/:idCliente',
     login.obrigatorio,
     AlugueisControlles.getAluguelCliente
-)
+);
 //get geral dos alugueis
 router.get(
     '/alugueis',
     login.obrigatorio,
     AlugueisControlles.getAluguel
-)
+);
 //cadastra aluguel
 router.post(
     '/novoAluguel',
@@ -47,6 +47,6 @@ router.patch(
 router.patch(
     '/removeAluguel/:idAluguel/:idCarro',
     AlugueisControlles.removeAluguel
-    )
+);
 
 module.exports = router;

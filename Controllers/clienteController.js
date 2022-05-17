@@ -1,6 +1,7 @@
 const mysql = require('../mysql').pool;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
+const idadeMininma = require('../Function/fuctionAnos')
 
 //get geral de clientes
 exports.getClientes = (req, res, next) => {
@@ -18,9 +19,10 @@ exports.getClientes = (req, res, next) => {
 }
 //cadastra um cliente
 exports.cadastraClientes = (req, res, next) => {
-    mysql.getConnection((error, conn  ) => {
+    mysql.getConnection((error, conn) => {
+
         conn.query('SELECT * FROM clientes WHERE email = ?',
-            [req.body.email], (error, result, ) => {
+            [req.body.email], (error, result,) => {
                 if (error) { return res.status(500).send({ error: error }) }
                 if (result.length > 0) {
                     res.status(409).send({
@@ -28,19 +30,22 @@ exports.cadastraClientes = (req, res, next) => {
                     })
                 } else {
                     bcrypt.hash(req.body.senha, 10, (errBcrypt, hash) => {
+                        const calcula = idadeMininma(new Date(), new Date(req.body.dataNascimento))
+                        console.log(calcula)
+                        if(calcula >= 20){
                         if (errBcrypt) { return res.status(500).send({ error: error }) };
                         conn.query(
                             `INSERT INTO clientes (
-                        nome, 
-                        cnh, 
-                        dataNascimento, 
-                        email, 
-                        telefone, 
-                        senha,
-                        adm,
-                        statusCliente
-                        ) 
-                        VALUES (?,?,?,?,?,?,?,?)`,
+                                        nome, 
+                                        cnh, 
+                                        dataNascimento, 
+                                        email, 
+                                        telefone, 
+                                        senha,
+                                        adm,
+                                        statusCliente
+                                                        ) 
+                                     VALUES (?,?,?,?,?,?,?,?)`,
                             [
                                 req.body.nome,
                                 req.body.cnh,
@@ -70,12 +75,12 @@ exports.cadastraClientes = (req, res, next) => {
 
                                 res.status(201).send(response)
                             })
-
+                        }else{
+                            res.status(203).send({mensagem:'O cliente precisa possuir pelo menos 20 anos!!'})
+                        }
                     })
                 }
             })
-
-
     })
 }
 //faz o validação do usuario e o login no sistema

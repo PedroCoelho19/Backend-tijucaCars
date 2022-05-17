@@ -43,7 +43,7 @@ router.patch(
     '/devolveCarro/:idCarro',
     login.obrigatorio,
     CarrosControlles.devolveCarro
-)
+);
 //deleta um carro
 router.delete(
     '/removeCarro/:idCarro',
