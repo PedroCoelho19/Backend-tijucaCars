@@ -2,6 +2,7 @@ const mysql = require('../mysql').pool;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 
+//get geral de clientes
 exports.getClientes = (req, res, next) => {
     mysql.getConnection((error, conn) => {
         if (error) { return res.status(500).send({ error: error }) };
@@ -15,7 +16,7 @@ exports.getClientes = (req, res, next) => {
         )
     })
 }
-
+//cadastra um cliente
 exports.cadastraClientes = (req, res, next) => {
     mysql.getConnection((error, conn  ) => {
         conn.query('SELECT * FROM clientes WHERE email = ?',
@@ -77,7 +78,7 @@ exports.cadastraClientes = (req, res, next) => {
 
     })
 }
-
+//faz o validação do usuario e o login no sistema
 exports.login = (req, res, next) => {
     mysql.getConnection((error, conn) => {
         if (error) { return res.status(500).send({ error: error }) }
@@ -122,7 +123,7 @@ exports.login = (req, res, next) => {
         })
     })
 }
-
+//get de cliente por id
 exports.getClienteId = (req, res, next) => {
 
     mysql.getConnection((error, conn) => {
@@ -138,7 +139,7 @@ exports.getClienteId = (req, res, next) => {
         )
     })
 }
-
+//altera os dados do cliente
 exports.alteraCliente = (req, res, next) => {
     mysql.getConnection((error, conn) => {
         if (error) { return res.status(500).send({ error: error }) };
@@ -170,7 +171,7 @@ exports.alteraCliente = (req, res, next) => {
         )
     });
 }
-
+//deleta um cliente
 exports.removeCliente = (req, res, next) => {
     mysql.getConnection((error, conn) => {
         try {

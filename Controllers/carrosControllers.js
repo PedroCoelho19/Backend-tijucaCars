@@ -1,12 +1,8 @@
-<<<<<<< HEAD
 const { send } = require("express/lib/response");
 
 const mysql = require("../mysql").pool;
 
-=======
-const mysql = require("../mysql").pool;
-
->>>>>>> cd32582187cfe83d8547dddf316c7559e2dc4f4f
+//get de todos os carros
 exports.getCarros = (req, res, next) => {
   mysql.getConnection((error, conn) => {
     if (error) {
@@ -20,7 +16,7 @@ exports.getCarros = (req, res, next) => {
     });
   });
 };
-
+//get dos carros que não estao alugados
 exports.getCarrosDisponiveis = (req, res, next) => {
   mysql.getConnection((error, conn) => {
     if (error) {
@@ -37,7 +33,7 @@ exports.getCarrosDisponiveis = (req, res, next) => {
     );
   });
 };
-
+//cadastra um carro
 exports.cadastroCarro = (req, res, next) => {
   mysql.getConnection((error, conn) => {
     conn.query(
@@ -98,7 +94,7 @@ exports.cadastroCarro = (req, res, next) => {
     );
   });
 };
-
+//get de carros por id
 exports.getCarrosId = (req, res, next) => {
   mysql.getConnection((error, conn) => {
     if (error) {
@@ -116,8 +112,7 @@ exports.getCarrosId = (req, res, next) => {
     );
   });
 };
-
-<<<<<<< HEAD
+//altera o status do carro para devolvido se ele estiver em uso
 exports.devolveCarro = (req, res, next) => {
   mysql.getConnection((error, conn) => {
     if(error){return res.status(500).send({error:error})};
@@ -143,13 +138,11 @@ exports.devolveCarro = (req, res, next) => {
     )
   })
 };
-
-=======
->>>>>>> cd32582187cfe83d8547dddf316c7559e2dc4f4f
+//tratamento de erro do get carros
 exports.getInsertCode = (req, res, next) => {
   return res.status(200).send({ response: "Adicione um idCarro para a rota!" });
 };
-
+//altera os dados de um carro
 exports.alteraCarro = (req, res, next) => {
   mysql.getConnection((error, conn) => {
     if (error) {
@@ -191,7 +184,7 @@ exports.alteraCarro = (req, res, next) => {
     );
   });
 };
-
+//deleta um carro
 exports.removeCarro = (req, res, next) => {
   mysql.getConnection((error, conn) => {
     try {

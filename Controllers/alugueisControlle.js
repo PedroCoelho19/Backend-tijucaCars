@@ -1,5 +1,6 @@
 const mysql = require('../mysql').pool;
 
+//get dos alugueis que ainda não foram finalizados
 exports.getAluguelFiltro = (req, res, next) => {
     mysql.getConnection((error, conn) => {
         if (error) { return res.status(500).send({ error: error }) };
@@ -24,7 +25,7 @@ exports.getAluguelFiltro = (req, res, next) => {
         )
     })
 }
-
+//get do alugal de um cliente pelo id do cliente
 exports.getAluguelCliente = (req, res, next) => {
     mysql.getConnection((error, conn) => {
         if (error) { return res.status(500).send({ error: error }) };
@@ -39,7 +40,7 @@ exports.getAluguelCliente = (req, res, next) => {
         )
     })
 }
-
+//get da datas em que os carros estão alugados
 exports.getDataCarro = (req, res, next) => {
     mysql.getConnection((error, conn) => {
         if (error) { return res.status(500).send({ error: error }) };
@@ -47,13 +48,15 @@ exports.getDataCarro = (req, res, next) => {
             'SELECT dataRetirada, dataEntrega FROM alugueis WHERE idCarro = ?',
             [req.params.idCarro],
             (error, resultado, fields) => {
-                if (error) { return res.status(500).send({ error: error }) }
-                return res.status(200).send({ response: resultado });
+                return res.status(200).send({
+                    response: resultado,
+                    mensagem: 'essas são as datas dos alugeis'
+                });
             }
         )
     })
 }
-
+//get de todos os alugueis
 exports.getAluguel = (req, res, next) => {
     mysql.getConnection((error, conn) => {
         if (error) { return res.status(500).send({ error: error }) };
@@ -67,21 +70,7 @@ exports.getAluguel = (req, res, next) => {
         res.status(201).send(response)
     })
 }
-
-exports.getAluguel = (req, res, next) => {
-    mysql.getConnection((error, conn) => {
-        if (error) { return res.status(500).send({ error: error }) };
-        conn.query(
-            'SELECT * FROM alugueis',
-            (error, resultado, fields) => {
-                if (error) { return res.status(500).send({ error: error }) }
-                return res.status(200).send({ response: resultado });
-            }
-
-        )
-    })
-}
-
+//cadastra um aluguel
 exports.novoAluguel = (req, res, next) => {
     mysql.getConnection((error, conn) => {
         try {
@@ -142,7 +131,6 @@ exports.novoAluguel = (req, res, next) => {
                             WHERE idCliente = ? 
                             `,
                             [req.body.idCliente])
-<<<<<<< HEAD
 
                         conn.query(
                             ` UPDATE carros
@@ -151,15 +139,6 @@ exports.novoAluguel = (req, res, next) => {
                                 `,
                             [req.body.idCarro]
                         )
-=======
-                            conn.query(
-                                ` UPDATE carros
-                                SET statusCarro = 2
-                                WHERE idCarro = ?
-                                `,
-                                [req.body.idCarro]
-                            )
->>>>>>> cd32582187cfe83d8547dddf316c7559e2dc4f4f
                     }
                 })
         } catch (error) {
@@ -167,7 +146,7 @@ exports.novoAluguel = (req, res, next) => {
         }
     })
 }
-
+//get dos alugueis por id
 exports.getAluguelId = (req, res, next) => {
 
     mysql.getConnection((error, conn) => {
@@ -183,7 +162,7 @@ exports.getAluguelId = (req, res, next) => {
         )
     })
 }
-
+//altera os dados do alugueç
 exports.alteraAluguel = (req, res, next) => {
     mysql.getConnection((error, conn) => {
         if (error) { return res.status(500).send({ error: error }) };
@@ -221,7 +200,7 @@ exports.alteraAluguel = (req, res, next) => {
         )
     })
 }
-
+//finaliza um aluguel
 exports.removeAluguel = (req, res, next) => {
 
     mysql.getConnection((error, conn) => {
