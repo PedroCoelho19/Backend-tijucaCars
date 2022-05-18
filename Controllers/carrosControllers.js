@@ -10,10 +10,10 @@ exports.getCarros = (req, res, next) => {
         return res.status(500).send({ error: error });
       }
       conn.query("SELECT * FROM carros", (error, resultado, fields) => {
+        conn.release();
         if (error) {
           throw error;
         }
-        conn.release();
         return res.status(200).send({ response: resultado });
       });
       

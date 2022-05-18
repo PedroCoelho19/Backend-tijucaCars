@@ -34,7 +34,7 @@ exports.getAluguelCliente = (req, res, next) => {
             'SELECT * FROM alugueis WHERE idCliente = ?',
             [req.params.idCliente],
             (error, resultado, fields) => {
-                if (error) { return res.status(500).send({ error: error }) }
+                if (error) { return res.status(500).send({ error: error })}
                 conn.release();
                 return res.status(200).send({ response: resultado });
             }
@@ -66,12 +66,12 @@ exports.getAluguel = (req, res, next) => {
         conn.query(
             'SELECT * FROM alugueis',
             (error, resultado, fields) => {
-                if (error) { return res.status(500).send({ error: error }) }
                 conn.release();
+                if (error) { return res.status(500).send({ error: error }) }
                 return res.status(200).send({ response: resultado });
             }
         )
-        res.status(201).send(response)
+       
     })
 }
 //cadastra um aluguel
