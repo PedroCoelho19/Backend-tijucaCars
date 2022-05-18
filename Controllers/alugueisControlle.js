@@ -1,5 +1,6 @@
 const mysql = require('../mysql').pool;
 
+
 //get dos alugueis que ainda não foram finalizados
 exports.getAluguelFiltro = (req, res, next) => {
     mysql.getConnection((error, conn) => {
@@ -34,11 +35,10 @@ exports.getAluguelCliente = (req, res, next) => {
             'SELECT * FROM alugueis WHERE idCliente = ?',
             [req.params.idCliente],
             (error, resultado, fields) => {
-                if (error) { return res.status(500).send({ error: error })}
+                if (error) { return res.status(500).send({ error: error }) }
                 conn.release();
-                return res.status(200).send({ response: resultado });
+                return res.status(200).send({ response: resultado});
             }
-
         )
     })
 }
@@ -49,12 +49,12 @@ exports.getDataCarro = (req, res, next) => {
         conn.query(
             'SELECT dataRetirada, dataEntrega FROM alugueis WHERE idCarro = ?',
             [req.params.idCarro],
-            (error, resultado, fields) => {
+            (error, result, fields) => {
                 conn.release();
                 return res.status(200).send({
-                    response: resultado,
+                    result: result,
                     mensagem: 'O carro ja esta reservado durante essas datas'
-                });
+                })
             }
         )
     })
@@ -66,12 +66,12 @@ exports.getAluguel = (req, res, next) => {
         conn.query(
             'SELECT * FROM alugueis',
             (error, resultado, fields) => {
-                conn.release();
+                conn.release();  
                 if (error) { return res.status(500).send({ error: error }) }
-                return res.status(200).send({ response: resultado });
+                return res.status(200).send({ response: resultado});
             }
         )
-       
+
     })
 }
 //cadastra um aluguel

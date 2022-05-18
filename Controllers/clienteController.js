@@ -12,7 +12,7 @@ exports.getClientes = (req, res, next) => {
             (error, resultado, fields) => {
                 conn.release();
                 if (error) { return res.status(500).send({ error: error }) }
-               
+
                 return res.status(200).send({ response: resultado });
             }
 
@@ -33,7 +33,6 @@ exports.cadastraClientes = (req, res, next) => {
                 } else {
                     bcrypt.hash(req.body.senha, 10, (errBcrypt, hash) => {
                         const calcula = idadeMininma(new Date(), new Date(req.body.dataNascimento))
-                        console.log(calcula)
                         if (calcula >= 20) {
                             if (errBcrypt) { return res.status(500).send({ error: error }) };
                             conn.query(
@@ -78,7 +77,7 @@ exports.cadastraClientes = (req, res, next) => {
                                     res.status(201).send(response)
                                 })
                         } else {
-                            res.status(203).send({ mensagem: 'O cliente precisa possuir pelo menos 20 anos!!' })
+                            res.status(401).send({ mensagem: 'O cliente precisa possuir pelo menos 20 anos!!' })
                         }
                     })
                 }
@@ -131,7 +130,6 @@ exports.login = (req, res, next) => {
         })
     })
 }
-
 //get de cliente por id
 exports.getClienteId = (req, res, next) => {
 
@@ -141,11 +139,10 @@ exports.getClienteId = (req, res, next) => {
             'SELECT * FROM clientes WHERE idCliente = ?;',
             [req.params.idCliente],
             (error, resultado, fields) => {
-                conn.release();
+                conn.release()
                 if (error) { return res.status(500).send({ error: error }) }
                 return res.status(200).send({ response: resultado });
             }
-
         )
     })
 }

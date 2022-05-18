@@ -19,6 +19,4 @@ var calculaIdade = function(dataAtual,dataNascimento) {
     return anos ;
 }
 
-console.log(calculaIdade(new Date, new Date(2001,0,02)))
-
 module.exports = calculaIdade;
